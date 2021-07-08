@@ -1,7 +1,9 @@
 
 
 > minikube start --memory 11000 --cpus 4 --profile flagger --driver virtualbox --kubernetes-version v1.20.2
+> 
 > minikube --profile flagger addons enable istio-provisioner
+> 
 > minikube --profile flagger addons enable istio
 
 # Por si queremos métricas
@@ -10,7 +12,9 @@
 
 Instalación
 > helm repo add flagger https://flagger.app
+
 > kubectl apply -f https://raw.githubusercontent.com/weaveworks/flagger/master/artifacts/flagger/crd.yaml
+
 > helm upgrade -i flagger flagger/flagger \
  --namespace=istio-system \
  --set crd.create=false \
@@ -24,8 +28,10 @@ Flagger viene con un dashboard específico de Grafana para monitorizar las canar
  --set url=http://prometheus.istio-system:9090 \
  --set user=admin \
  --set password=change-me
+
 # Verificar que funciona haciendo port forwarding del puerto de Grafana:
 > kubectl -n istio-system port-forward svc/flagger-grafana 3000:80
+> 
 # Abrir la url http://localhost:3000
 
 
