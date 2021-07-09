@@ -4,7 +4,7 @@
 > minikube --profile flagger addons enable istio-provisioner
 > minikube --profile flagger addons enable istio
 
-# Por si queremos métricas
+#### Por si queremos métricas
 > minikube --profile flagger addons enable metrics-server
 
 
@@ -24,13 +24,14 @@ Flagger viene con un dashboard específico de Grafana para monitorizar las canar
  --set url=http://prometheus.istio-system:9090 \
  --set user=admin \
  --set password=change-me
-# Verificar que funciona haciendo port forwarding del puerto de Grafana:
+#### Verificar que funciona haciendo port forwarding del puerto de Grafana:
 > kubectl -n istio-system port-forward svc/flagger-grafana 3000:80
-# Abrir la url http://localhost:3000
+#### Abrir la url http://localhost:3000
 
 
-# Activamos la inyección del sidecar de istio en el namespace test
-> kubectl label namespace flyway istio-injection=enabled
+
+
+
 
 ¿??¿?¿
 # Desplegamos el horizontal pod autoscaler
@@ -45,20 +46,38 @@ $ kubectl apply -k github.com/weaveworks/flagger//kustomize/tester
 
 
 
+
+
+
 ### EJECUCIÓN DE FLYWAY
 
 > kubectl create ns flyway
 
+
+#### Despliegue de la BBDD
 > kubectl apply -n flyway -f db-deployment.yaml 
 
+
+#### Activamos la inyección del sidecar de istio en el namespace test
+> kubectl label namespace flyway istio-injection=enabled
+
+
 Nos va a ir diciendo cada los pods que se crean
+
 > watch kubectl get pod,deployment,service,horizontalpodautoscaler,destinationrule,virtualservice,canary -n flyway
 
 
 
+#### Aplicamos el deployment
 > kubectl apply -f deployment.yaml 
 
-> kubectl logs pod/XXXX -n flyway | tail 
+
+Vemos los logs del pod, al haber dos contenedores dentro del pod, debemos elegir el contendor concreto con -c XXXXX
+
+> kubectl logs pod/XXXX -n flyway -c zerodowntime  | tail 
+
+
+
 
 
 
