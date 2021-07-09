@@ -1,7 +1,9 @@
 
 
 > minikube start --memory 11000 --cpus 4 --profile flagger --driver virtualbox --kubernetes-version v1.20.2
+> 
 > minikube --profile flagger addons enable istio-provisioner
+> 
 > minikube --profile flagger addons enable istio
 
 #### Por si queremos métricas
@@ -10,7 +12,9 @@
 
 Instalación
 > helm repo add flagger https://flagger.app
+
 > kubectl apply -f https://raw.githubusercontent.com/weaveworks/flagger/master/artifacts/flagger/crd.yaml
+
 > helm upgrade -i flagger flagger/flagger \
  --namespace=istio-system \
  --set crd.create=false \
