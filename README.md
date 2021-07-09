@@ -1,12 +1,13 @@
 
 
-> minikube start --memory 11000 --cpus 4 --profile flagger --driver virtualbox --kubernetes-version v1.20.2
-> 
+> minikube start --memory 100000 --cpus 4 --profile flagger --driver virtualbox --kubernetes-version v1.20.2
+
+
+#### Activamos
 > minikube --profile flagger addons enable istio-provisioner
-> 
+
 > minikube --profile flagger addons enable istio
 
-#### Por si queremos métricas
 > minikube --profile flagger addons enable metrics-server
 
 
@@ -54,6 +55,16 @@ $ kubectl apply -k github.com/weaveworks/flagger//kustomize/tester
 
 
 ### EJECUCIÓN DE FLYWAY
+
+#### Activamos
+> minikube --profile flagger addons enable istio-provisioner
+
+> minikube --profile flagger addons enable istio
+
+> minikube --profile flagger addons enable metrics-server
+
+
+
 
 > kubectl create ns flyway
 
