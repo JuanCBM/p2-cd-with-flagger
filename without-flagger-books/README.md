@@ -34,33 +34,38 @@ minikube addons enable istio -p canary-istio
 ```
 kubectl create ns practice
 
-kubectl label namespace practice istio-injection=enabled
-
 ```
 
 3. Deploy database deployment:
 
 ```
-kubectl apply -f db-deployment.yaml -ns practice
+kubectl apply -f db-deployment.yaml -n practice
 ```
+
+```
+kubectl apply -f sidecar.yaml -n practice
+```
+
+kubectl label namespace practice istio-injection=enabled
+
 
 4. Deploy application deployment & service:
 
 ```
-kubectl apply -f deployment.yaml -ns practice
+kubectl apply -f deployment.yaml -n practice
 ```
 
 5. Create istio gateway
 
 ```
-kubectl apply -f gateway.yaml -ns practice
+kubectl apply -f gateway.yaml -n practice
 ```
 
 
 6. Create the virtual service:
 
 ```
-kubectl apply -f virtual-service-v1.yaml -ns practice
+kubectl apply -f virtual-service-v1.yaml -n practice
 ```
 
 7. Check app access

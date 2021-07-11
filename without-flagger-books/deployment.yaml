@@ -16,28 +16,26 @@ spec:
       labels:
         app: book-app
         version: v1
+
     spec:
+      securityContext:
+        runAsUser: 1000
+      restartPolicy: Always
       containers:
-      - name: book-app
-        image: docker.io/juablazmahuerta/book-app:v1
-        resources:
-          requests:
-            cpu: "100m"
-        imagePullPolicy: IfNotPresent #Always
-        ports:
-        - containerPort: 9991
-        env:
-        - name: MYSQL_HOST
-          value: "db-flyway"
-        - name: SERVER_PORT
-          value: "9991"
-        - name: MYSQL_DB
-          value: test
-        - name: MYSQL_USER
-          value: root
-        - name: MYSQL_PASS
-          value: pass
-        securityContext:
+        - name: book-app
+          image: docker.io/juablazmahuerta/book-app:v1
+          env:
+            - name: MYSQL_HOST
+              value: db-flyway
+            - name: MYSQL_DB
+              value: test
+            - name: MYSQL_USER
+              value: root
+            - name: MYSQL_PASS
+              value: pass
+          ports:
+            - containerPort: 9991
+          securityContext:
             allowPrivilegeEscalation: false
 
 ---
