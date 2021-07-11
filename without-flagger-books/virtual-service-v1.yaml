@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: practice2
+  namespace: practice
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - practice2-gateway
+  http:
+  - match:
+    - uri:
+        exact: /
+    route:
+    - destination:
+        host: practice2
+        subset: v1
+        port:
+          number: 9991
+      weight: 100

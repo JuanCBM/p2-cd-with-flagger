@@ -21,36 +21,40 @@ minikube --profile canary-istio-books addons enable istio-provisioner
 minikube --profile canary-istio-books addons enable istio
 ```
 
-3. Deploy database deployment:
+3. Create namespace
+```
+kubectl create ns practice
+```
+
+4. Deploy database deployment:
 
 ```
 kubectl apply -f db-deployment.yaml
 ```
 
-3. Deploy application deployment:
+5. Deploy application deployment:
 
 ```
 kubectl apply -f deployment.yaml
 ```
 
-4. Create istio gateway
+6. Create istio gateway
 
 ```
-kubectl apply -f zerodowntime-gateway.yaml
+kubectl apply -f book-app-gateway.yaml
 ```
 
-5. Create destination rules we will use in this example:
+7. Create destination rules we will use in this example:
 
 ```
-kubectl apply -f zerodowntime-destinationrule.yaml
+kubectl apply -f book-app-destinationrule.yaml
 ```
 
-6. Create the virtual service:
+8. Create the virtual service:
 
 ```
-kubectl apply -f zerodowntime-virtual-service-v1.yaml
+kubectl apply -f virtual-service-v1.yaml
 ```
-
 
 
 $ export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
@@ -59,7 +63,7 @@ $ export INGRESS_HOST=$(minikube ip -p canary-istio-books)
 $ export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
 
 
-curl http://$GATEWAY_URL/person
+curl http://$GATEWAY_URL/api/book
 
 **V1 is deployed and ready for zerodowntime version updates**
 

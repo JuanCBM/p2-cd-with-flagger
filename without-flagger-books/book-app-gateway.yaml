@@ -1,7 +1,8 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: book-app-gateway
+  name: practice2-gateway
+  namespace: practice
 spec:
   selector:
     istio: ingressgateway # use istio default controller

@@ -1,38 +1,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: db-flyway
+  name: db
+  namespace: practice
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: db-flyway
+      app: db
   template:
     metadata:
       labels:
-        app: db-flyway
-      spec:
-    containers:
-      - name: mysql
+        app: db
+    spec:
+      containers:
+      - name: practice2
         image: mysql:8.0.22
-        env:
-          - name: MYSQL_ROOT_PASSWORD
-            value: pass
-          - name: MYSQL_DATABASE
-            value: test
+        resources:
+          requests:
+            cpu: "100m"
+        imagePullPolicy: IfNotPresent #Always
         ports:
-          - containerPort: 3306
-
+        - containerPort: 3306
+        env:
+        - name: MYSQL_DATABASE
+          value: "test"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "pass"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: db-flyway
+  name: db
+  namespace: practice
   labels:
-    app: db-flyway
+    app: db
 spec:
   ports:
   - port: 3306
     name: http
   selector:
-    app: db-flyway
+    app: db
+
