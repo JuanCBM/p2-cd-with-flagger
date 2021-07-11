@@ -67,7 +67,7 @@ kubectl apply -f deployment.yaml -n practice
 9. Create istio gateway
 
 ```
-kubectl apply -f gateway.yaml -n practice
+kubectl apply -f gateway.yaml -n istio-system
 ```
 
 
@@ -102,16 +102,6 @@ curl http://$GATEWAY_URL/api/books/
 
 
 
-
-# lanzamos v2 de la app y luego:
-
-8. Create destination rules we will use in this example:
-
-```
-kubectl apply -f book-app-destinationrule.yaml
-```
-
-
 **V1 is deployed and ready for zerodowntime version updates**
 
 # V1 to V2
@@ -125,7 +115,7 @@ kubectl apply -f deployment-v2.yaml
 2. Distribute application 90% to v1 and 10% to v2
 
 ```
-kubectl apply -f zerodowntime-virtual-service-v1-to-v2.yaml
+kubectl apply -f virtual-service-v1-to-v2.yaml
 ```
 
 # V2
@@ -133,13 +123,13 @@ kubectl apply -f zerodowntime-virtual-service-v1-to-v2.yaml
 1. Execute the virtual service to only serve to v2:
 
 ```
-kubectl apply -f zerodowntime-virtual-service-v2.yaml
+kubectl apply -f virtual-service-v2.yaml
 ```
 
 2. Delete deployment V1
 
 ```
-kubectl delete deployment zerodowntime-v1
+kubectl delete deployment v1
 ```
 
 # V2 to V3
@@ -153,7 +143,7 @@ kubectl apply -f deployment-v3.yaml
 2. Distribute application 90% to v2 and 10% to v3
 
 ```
-kubectl apply -f zerodowntime-virtual-service-v2-to-v3.yaml
+kubectl apply -f virtual-service-v2-to-v3.yaml
 ```
 
 # V3
@@ -161,13 +151,13 @@ kubectl apply -f zerodowntime-virtual-service-v2-to-v3.yaml
 1. Execute the virtual service to only serve to v3:
 
 ```
-kubectl apply -f zerodowntime-virtual-service-v3.yaml
+kubectl apply -f virtual-service-v3.yaml
 ```
 
 2. Delete deployment v2
 
 ```
-kubectl delete deployment zerodowntime-v2
+kubectl delete deployment v2
 ```
 
 # V3 to V4
@@ -181,7 +171,7 @@ kubectl apply -f deployment-v4.yaml
 2. Distribute application 90% to v3 and 10% to v4
 
 ```
-kubectl apply -f zerodowntime-virtual-service-v3-to-v4.yaml
+kubectl apply -f virtual-service-v3-to-v4.yaml
 ```
 
 # V4
@@ -189,12 +179,12 @@ kubectl apply -f zerodowntime-virtual-service-v3-to-v4.yaml
 1. Execute the virtual service to only serve to v4:
 
 ```
-kubectl apply -f zerodowntime-virtual-service-v4.yaml
+kubectl apply -f virtual-service-v4.yaml
 ```
 
 2. Delete deployment v3
 
 ```
-kubectl delete deployment zerodowntime-v3
+kubectl delete deployment v3
 ```
 

@@ -6,9 +6,9 @@ metadata:
 spec:
   host: book-app
   subsets:
-  - name: primary
+  - name: v1
     labels:
       version: v1
-  - name: canary
+  - name: v2
     labels:
       version: v2
