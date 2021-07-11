@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: practice2
-        image: juablazmahuerta/book-app:v1
+        image: docker.io/juablazmahuerta/book-app:v1
         resources:
           requests:
             cpu: "100m"
