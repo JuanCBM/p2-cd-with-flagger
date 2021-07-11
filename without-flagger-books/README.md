@@ -1,4 +1,4 @@
-# ejem-4-canary-zerodowntime
+# ejem-4-canary-book-app
 
 Generar las imágenes de docker:
 
@@ -102,7 +102,7 @@ curl http://$GATEWAY_URL/api/books/
 
 
 
-**V1 is deployed and ready for zerodowntime version updates**
+**V1 is deployed and ready for book-app version updates**
 
 # V1 to V2
 
