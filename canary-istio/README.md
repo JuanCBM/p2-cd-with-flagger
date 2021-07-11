@@ -1,4 +1,4 @@
-# Continuous deployment with Flagger
+# Continuous deployment with Istio
 
 - [DockerHub repo](https://hub.docker.com/)
 - Meter aqui el repo de dockerHub
