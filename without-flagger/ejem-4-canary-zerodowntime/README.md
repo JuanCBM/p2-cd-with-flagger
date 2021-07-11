@@ -5,7 +5,7 @@
 1. Start Minikube
 
 ```
-minikube start --profile canary-istio --kubernetes-version v1.20.0
+minikube start --profile canary-istio --kubernetes-version v1.20.0 --memory=8192 --cpus=4  --driver=virtualbox
 ```
 
 2. Enable istio-provisioner and istio
@@ -44,6 +44,16 @@ kubectl apply -f zerodowntime-destinationrule.yaml
 ```
 kubectl apply -f zerodowntime-virtual-service-v1.yaml
 ```
+
+
+
+$ export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
+$ export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}')
+$ export INGRESS_HOST=$(minikube ip -p canary-istio)
+$ export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
+
+
+curl http://$GATEWAY_URL/person
 
 **V1 is deployed and ready for zerodowntime version updates**
 

@@ -3,7 +3,13 @@
 Generar las imágenes de docker:
 
 ```
-mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=juablazmahuerta/book-app:v1
+mvn spring-boot:build-image -Dspring-boot.build-image.imageName=juablazmahuerta/book-app:v1
+```
+
+Push image to repo:
+
+```
+docker push docker.io/juablazmahuerta/book-app:v1
 ```
 
 # Deploy V1
