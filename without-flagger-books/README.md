@@ -91,7 +91,7 @@ export INGRESS_HOST=$(minikube ip -p canary-istio)
 ```
 
 ```
-export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT /
+export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT 
 ```
 
 echo $GATEWAY_URL
