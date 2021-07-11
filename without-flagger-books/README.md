@@ -70,10 +70,14 @@ kubectl apply -f virtual-service-v1.yaml -n practice
 
 7. Check app access
 
-$ export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
-$ export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}')
-$ export INGRESS_HOST=$(minikube ip -p canary-istio)
-$ export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}') /
+export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}') /
+export INGRESS_HOST=$(minikube ip -p canary-istio) /
+export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT /
+
+
+echo $GATEWAY_URL
+
 
 
 curl http://$GATEWAY_URL/api/books

@@ -33,6 +33,8 @@ spec:
               value: root
             - name: MYSQL_PASS
               value: pass
+            - name: SERVER_PORT
+              value: "9991"
           ports:
             - containerPort: 9991
           securityContext:
