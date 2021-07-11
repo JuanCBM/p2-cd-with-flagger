@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: db
+  name: db-flyway
   namespace: practice
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: db
+      app: db-flyway
   template:
     metadata:
       labels:
-        app: db
+        app: db-flyway
     spec:
       containers:
-      - name: practice2
-        image: mysql:8.0.22
+      - name: book-app
+        image: docker.io/mysql:8.0.22
         resources:
           requests:
             cpu: "100m"
@@ -31,14 +31,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: db
+  name: db-flyway
   namespace: practice
+
   labels:
-    app: db
+    app: db-flyway
 spec:
   ports:
   - port: 3306
     name: http
   selector:
-    app: db
-
+    app: db-flyway

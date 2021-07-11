@@ -1,14 +1,14 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: practice2
-  namespace: practice
+  name: book-app
+
 spec:
-  host: practice2
+  host: book-app
   subsets:
-  - name: v1
+  - name: primary
     labels:
       version: v1
-  - name: v2
+  - name: canary
     labels:
       version: v2

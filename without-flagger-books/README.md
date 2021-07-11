@@ -17,59 +17,73 @@ docker push docker.io/juablazmahuerta/book-app:v1
 1. Start Minikube
 
 ```
-minikube start --profile canary-istio-books --kubernetes-version v1.20.0 --memory=8192 --cpus=4  --driver=virtualbox
+minikube start --profile canary-istio --kubernetes-version v1.20.0 --memory=8192 --cpus=4  --driver=virtualbox
+
 ```
 
 2. Enable istio-provisioner and istio
 
 ```
-minikube --profile canary-istio-books addons enable istio-provisioner
-minikube --profile canary-istio-books addons enable istio
+minikube addons enable ingress -p canary-istio
+minikube addons enable istio-provisioner -p canary-istio
+minikube addons enable istio -p canary-istio
+
 ```
 
-3. Create namespace
+
 ```
 kubectl create ns practice
-```
 
-4. Deploy database deployment:
-
-```
-kubectl apply -f db-deployment.yaml
-```
-
-5. Deploy application deployment:
+kubectl label namespace practice istio-injection=enabled
 
 ```
-kubectl apply -f deployment.yaml
-```
 
-6. Create istio gateway
+3. Deploy database deployment:
 
 ```
-kubectl apply -f book-app-gateway.yaml
+kubectl apply -f db-deployment.yaml -ns practice
 ```
 
-7. Create destination rules we will use in this example:
+4. Deploy application deployment & service:
+
+```
+kubectl apply -f deployment.yaml -ns practice
+```
+
+5. Create istio gateway
+
+```
+kubectl apply -f gateway.yaml -ns practice
+```
+
+
+6. Create the virtual service:
+
+```
+kubectl apply -f virtual-service-v1.yaml -ns practice
+```
+
+7. Check app access
+
+$ export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
+$ export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}')
+$ export INGRESS_HOST=$(minikube ip -p canary-istio)
+$ export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
+
+
+curl http://$GATEWAY_URL/api/books
+
+
+
+
+# lanzamos v2 de la app y luego:
+
+8. Create destination rules we will use in this example:
 
 ```
 kubectl apply -f book-app-destinationrule.yaml
 ```
 
-8. Create the virtual service:
-
-```
-kubectl apply -f virtual-service-v1.yaml
-```
-
-
-$ export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
-$ export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}')
-$ export INGRESS_HOST=$(minikube ip -p canary-istio-books)
-$ export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
-
-
-curl http://$GATEWAY_URL/api/book
 
 **V1 is deployed and ready for zerodowntime version updates**
 
