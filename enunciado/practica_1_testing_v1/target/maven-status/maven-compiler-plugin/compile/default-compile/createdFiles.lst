@@ -1,0 +1,9 @@
+es/urjc/code/daw/library/DatabaseInitializer.class
+es/urjc/code/daw/library/book/BookRepository.class
+es/urjc/code/daw/library/book/Book.class
+es/urjc/code/daw/library/exceptions/BookNotFoundException.class
+es/urjc/code/daw/library/web/BookWebController.class
+es/urjc/code/daw/library/rest/BookRestController.class
+es/urjc/code/daw/library/book/BookService.class
+es/urjc/code/daw/library/notification/NotificationService.class
+es/urjc/code/daw/library/Application.class

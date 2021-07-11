@@ -1,0 +1,9 @@
+/home/juablaz/Escritorio/EclipseProjects/p2-cd-with-flagger/enunciado/practica_1_testing_v1/src/main/java/es/urjc/code/daw/library/notification/NotificationService.java
+/home/juablaz/Escritorio/EclipseProjects/p2-cd-with-flagger/enunciado/practica_1_testing_v1/src/main/java/es/urjc/code/daw/library/DatabaseInitializer.java
+/home/juablaz/Escritorio/EclipseProjects/p2-cd-with-flagger/enunciado/practica_1_testing_v1/src/main/java/es/urjc/code/daw/library/book/BookRepository.java
+/home/juablaz/Escritorio/EclipseProjects/p2-cd-with-flagger/enunciado/practica_1_testing_v1/src/main/java/es/urjc/code/daw/library/book/Book.java
+/home/juablaz/Escritorio/EclipseProjects/p2-cd-with-flagger/enunciado/practica_1_testing_v1/src/main/java/es/urjc/code/daw/library/rest/BookRestController.java
+/home/juablaz/Escritorio/EclipseProjects/p2-cd-with-flagger/enunciado/practica_1_testing_v1/src/main/java/es/urjc/code/daw/library/exceptions/BookNotFoundException.java
+/home/juablaz/Escritorio/EclipseProjects/p2-cd-with-flagger/enunciado/practica_1_testing_v1/src/main/java/es/urjc/code/daw/library/web/BookWebController.java
+/home/juablaz/Escritorio/EclipseProjects/p2-cd-with-flagger/enunciado/practica_1_testing_v1/src/main/java/es/urjc/code/daw/library/book/BookService.java
+/home/juablaz/Escritorio/EclipseProjects/p2-cd-with-flagger/enunciado/practica_1_testing_v1/src/main/java/es/urjc/code/daw/library/Application.java
