@@ -30,45 +30,54 @@ minikube addons enable istio -p canary-istio
 
 ```
 
+3. Namespace
 
 ```
 kubectl create ns practice
 
 ```
 
-3. Deploy database deployment:
+4. Deploy database deployment:
 
 ```
 kubectl apply -f db-deployment.yaml -n practice
 ```
 
+5. Sidecar
 ```
 kubectl apply -f sidecar.yaml -n practice
 ```
 
+6. Enable istio-injection
+
 kubectl label namespace practice istio-injection=enabled
 
 
-4. Deploy application deployment & service:
+7.  
+
+minikube tunnel -p canary-istio
+
+
+8. Deploy application deployment & service:
 
 ```
 kubectl apply -f deployment.yaml -n practice
 ```
 
-5. Create istio gateway
+9. Create istio gateway
 
 ```
 kubectl apply -f gateway.yaml -n practice
 ```
 
 
-6. Create the virtual service:
+10. Create the virtual service:
 
 ```
 kubectl apply -f virtual-service-v1.yaml -n practice
 ```
 
-7. Check app access
+11. Check app access
 
 export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}') /
 export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}') /
