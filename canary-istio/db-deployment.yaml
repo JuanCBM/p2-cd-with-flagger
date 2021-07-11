@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  namespace: practice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+      - name: practice2
+        image: docker.io/mysql:8
+        resources:
+          requests:
+            cpu: "100m"
+        imagePullPolicy: IfNotPresent #Always
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_DATABASE
+          value: "test"
+        - name: MYSQL_ROOT_PASSWORD
+          value: "pass"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: practice
+  labels:
+    app: db
+spec:
+  ports:
+  - port: 3306
+    name: http
+  selector:
+    app: db
