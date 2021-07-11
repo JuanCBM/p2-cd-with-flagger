@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-app-v1
+  labels:
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-app
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: book-app
+        version: v1
+      spec:
+      securityContext:
+        runAsUser: 1000
+      restartPolicy: Always
+      containers:
+        - name: library
+          image: juablazmahuerta/book-app:v1
+          env:
+            - name: MYSQL_HOST
+              value: mysql-service
+            - name: MYSQL_DB
+              value: test
+            - name: MYSQL_USER
+              value: root
+            - name: MYSQL_PASS
+              value: pass
+          ports:
+            - containerPort: 8881
+          securityContext:
+            allowPrivilegeEscalation: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-app
+  labels:
+    app: book-app
+spec:
+  ports:
+  - port: 9991
+    name: http
+  selector:
+    app: book-app
