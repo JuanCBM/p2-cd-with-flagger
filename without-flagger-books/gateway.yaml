@@ -1,15 +1,14 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: book-app-gateway
-  namespace: istio-system
+  name: bookapp-gateway
 spec:
   selector:
-    istio: ingressgateway
+    istio: ingressgateway # use istio default controller
   servers:
-    - port:
-        number: 80
-        name: http
-        protocol: HTTP
-      hosts:
-        - "*"
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"

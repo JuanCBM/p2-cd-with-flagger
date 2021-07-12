@@ -3,13 +3,21 @@
 Generar las imágenes de docker:
 
 ```
-mvn spring-boot:build-image -Dspring-boot.build-image.imageName=juablazmahuerta/book-app:v1
+mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=juablazmahuerta/book-app:v1 
+mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=juablazmahuerta/book-app:v2 
+mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=juablazmahuerta/book-app:v3 
+mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=juablazmahuerta/book-app:v4 
+
 ```
 
 Push image to repo:
 
 ```
 docker push docker.io/juablazmahuerta/book-app:v1
+docker push docker.io/juablazmahuerta/book-app:v2
+docker push docker.io/juablazmahuerta/book-app:v3
+docker push docker.io/juablazmahuerta/book-app:v4
+
 ```
 
 # Deploy V1
@@ -17,7 +25,7 @@ docker push docker.io/juablazmahuerta/book-app:v1
 1. Start Minikube
 
 ```
-minikube start --profile canary-istio --kubernetes-version v1.20.0 --memory=10500 --cpus=4  --driver=virtualbox --addons istio-provisioner --addons istio --addons ingress
+minikube start --profile canary-istio --kubernetes-version v1.17.0 --memory=5000 --cpus=4  --driver=virtualbox
 
 ```
 2.
@@ -65,11 +73,7 @@ kubectl apply -f virtual-service-v1.yaml
 
 8. Check app access
 ```
-export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}') 
-```
-
-```
-export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}')
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
 ```
 
 ```

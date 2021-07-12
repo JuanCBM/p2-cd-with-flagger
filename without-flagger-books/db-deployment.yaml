@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: book-app
+  name: db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: book-app
+      app: db
   template:
     metadata:
       labels:
-        app: book-app
+        app: db
     spec:
       containers:
         - name: mysql
@@ -26,9 +26,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: book-app
+  name: db
   labels:
-    app: book-app
+    app: db
 spec:
   ports:
   - port: 3306
@@ -36,4 +36,4 @@ spec:
     targetPort: 3306
     protocol: TCP
   selector:
-    app: book-app
+    app: db
