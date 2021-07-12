@@ -25,12 +25,12 @@ spec:
             cpu: "100m"
         imagePullPolicy: Always #IfNotPresent 
         ports:
-        - containerPort: 9991
+        - containerPort: 8881
         env:
         #- name: MYSQL_HOST
         #  value: "db"
         - name: SERVER_PORT
-          value: "9991"
+          value: "8881"
         #- name: SPRING_FLYWAY_VALIDATE-ON-MIGRATE
         #  value: "false"
         - name: SPRING_DATASOURCE_URL
@@ -45,7 +45,7 @@ metadata:
     app: practice2
 spec:
   ports:
-  - port: 9991
+  - port: 8881
     name: http
   selector:
     app: practice2
