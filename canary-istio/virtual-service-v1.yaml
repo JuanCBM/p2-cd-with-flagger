@@ -15,7 +15,5 @@ spec:
     route:
     - destination:
         host: practice2
-        subset: v1
         port:
-          number: 9991
-      weight: 100
+          number: 8881

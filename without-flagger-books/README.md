@@ -17,16 +17,7 @@ docker push docker.io/juablazmahuerta/book-app:v1
 1. Start Minikube
 
 ```
-minikube start --profile canary-istio --kubernetes-version v1.20.0 --memory=8192 --cpus=4  --driver=virtualbox
-
-```
-
-2. Enable istio-provisioner and istio
-
-```
-minikube addons enable ingress -p canary-istio
-minikube addons enable istio-provisioner -p canary-istio
-minikube addons enable istio -p canary-istio
+minikube start --profile canary-istio --kubernetes-version v1.20.0 --memory=10500 --cpus=4  --driver=virtualbox --addons istio-provisioner --addons istio --addons ingress
 
 ```
 
@@ -41,11 +32,6 @@ kubectl create ns practice
 
 ```
 kubectl apply -f db-deployment.yaml -n practice
-```
-
-5. Sidecar
-```
-kubectl apply -f sidecar.yaml -n practice
 ```
 
 6. Enable istio-injection

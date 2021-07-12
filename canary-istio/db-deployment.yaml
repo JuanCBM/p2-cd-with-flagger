@@ -4,6 +4,8 @@ metadata:
   name: db
   namespace: practice
 spec:
+  strategy:
+    type: Recreate
   replicas: 1
   selector:
     matchLabels:
@@ -15,7 +17,7 @@ spec:
     spec:
       containers:
       - name: practice2
-        image: docker.io/mysql:8
+        image: mysql:8.0.22
         resources:
           requests:
             cpu: "100m"
@@ -24,20 +26,23 @@ spec:
         - containerPort: 3306
         env:
         - name: MYSQL_DATABASE
-          value: "test"
+          value: test
         - name: MYSQL_ROOT_PASSWORD
-          value: "pass"
+          value: pass
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: db
+  name: db-service
   namespace: practice
   labels:
     app: db
 spec:
   ports:
   - port: 3306
-    name: http
+    targetPort: 3306
+    protocol: TCP
+    name: db-port
   selector:
     app: db
+  type: ClusterIP
