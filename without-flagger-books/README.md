@@ -1,4 +1,4 @@
-# ejem-4-canary-zerodowntime
+# ejem-4-canary-book-app
 
 Generar las imágenes de docker:
 
@@ -30,62 +30,79 @@ minikube addons enable istio -p canary-istio
 
 ```
 
+3. Namespace
 
 ```
 kubectl create ns practice
 
+```
+
+4. Deploy database deployment:
+
+```
+kubectl apply -f db-deployment.yaml -n practice
+```
+
+5. Sidecar
+```
+kubectl apply -f sidecar.yaml -n practice
+```
+
+6. Enable istio-injection
+```
 kubectl label namespace practice istio-injection=enabled
-
 ```
 
-3. Deploy database deployment:
+7. Tunnel 
+
+minikube tunnel -p canary-istio
+
+
+8. Deploy application deployment & service:
 
 ```
-kubectl apply -f db-deployment.yaml -ns practice
+kubectl apply -f deployment.yaml -n practice
 ```
 
-4. Deploy application deployment & service:
+9. Create istio gateway
 
 ```
-kubectl apply -f deployment.yaml -ns practice
-```
-
-5. Create istio gateway
-
-```
-kubectl apply -f gateway.yaml -ns practice
-```
-
-
-6. Create the virtual service:
-
-```
-kubectl apply -f virtual-service-v1.yaml -ns practice
-```
-
-7. Check app access
-
-$ export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
-$ export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}')
-$ export INGRESS_HOST=$(minikube ip -p canary-istio)
-$ export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
-
-
-curl http://$GATEWAY_URL/api/books
-
-
-
-
-# lanzamos v2 de la app y luego:
-
-8. Create destination rules we will use in this example:
-
-```
-kubectl apply -f book-app-destinationrule.yaml
+kubectl apply -f gateway.yaml -n istio-system
 ```
 
 
-**V1 is deployed and ready for zerodowntime version updates**
+10. Create the virtual service:
+
+```
+kubectl apply -f virtual-service-v1.yaml -n practice
+```
+
+11. Check app access
+```
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}') 
+```
+
+```
+export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}')
+```
+
+```
+export INGRESS_HOST=$(minikube ip -p canary-istio)
+```
+
+```
+export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT 
+```
+
+echo $GATEWAY_URL
+
+
+
+curl http://$GATEWAY_URL/api/books/
+
+
+
+**V1 is deployed and ready for book-app version updates**
 
 # V1 to V2
 
@@ -98,7 +115,7 @@ kubectl apply -f deployment-v2.yaml
 2. Distribute application 90% to v1 and 10% to v2
 
 ```
-kubectl apply -f zerodowntime-virtual-service-v1-to-v2.yaml
+kubectl apply -f virtual-service-v1-to-v2.yaml
 ```
 
 # V2
@@ -106,13 +123,13 @@ kubectl apply -f zerodowntime-virtual-service-v1-to-v2.yaml
 1. Execute the virtual service to only serve to v2:
 
 ```
-kubectl apply -f zerodowntime-virtual-service-v2.yaml
+kubectl apply -f virtual-service-v2.yaml
 ```
 
 2. Delete deployment V1
 
 ```
-kubectl delete deployment zerodowntime-v1
+kubectl delete deployment v1
 ```
 
 # V2 to V3
@@ -126,7 +143,7 @@ kubectl apply -f deployment-v3.yaml
 2. Distribute application 90% to v2 and 10% to v3
 
 ```
-kubectl apply -f zerodowntime-virtual-service-v2-to-v3.yaml
+kubectl apply -f virtual-service-v2-to-v3.yaml
 ```
 
 # V3
@@ -134,13 +151,13 @@ kubectl apply -f zerodowntime-virtual-service-v2-to-v3.yaml
 1. Execute the virtual service to only serve to v3:
 
 ```
-kubectl apply -f zerodowntime-virtual-service-v3.yaml
+kubectl apply -f virtual-service-v3.yaml
 ```
 
 2. Delete deployment v2
 
 ```
-kubectl delete deployment zerodowntime-v2
+kubectl delete deployment v2
 ```
 
 # V3 to V4
@@ -154,7 +171,7 @@ kubectl apply -f deployment-v4.yaml
 2. Distribute application 90% to v3 and 10% to v4
 
 ```
-kubectl apply -f zerodowntime-virtual-service-v3-to-v4.yaml
+kubectl apply -f virtual-service-v3-to-v4.yaml
 ```
 
 # V4
@@ -162,12 +179,12 @@ kubectl apply -f zerodowntime-virtual-service-v3-to-v4.yaml
 1. Execute the virtual service to only serve to v4:
 
 ```
-kubectl apply -f zerodowntime-virtual-service-v4.yaml
+kubectl apply -f virtual-service-v4.yaml
 ```
 
 2. Delete deployment v3
 
 ```
-kubectl delete deployment zerodowntime-v3
+kubectl delete deployment v3
 ```
 

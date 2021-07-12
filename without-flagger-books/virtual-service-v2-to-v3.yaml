@@ -14,5 +14,13 @@ spec:
     route:
     - destination:
         host: book-app
+        subset: v2
         port:
           number: 9991
+      weight: 90
+    - destination:
+        host: book-app
+        subset: v3
+        port:
+          number: 9991
+      weight: 10

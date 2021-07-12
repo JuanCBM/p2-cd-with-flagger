@@ -14,5 +14,7 @@ spec:
     route:
     - destination:
         host: book-app
+        subset: v4
         port:
           number: 9991
+      weight: 100

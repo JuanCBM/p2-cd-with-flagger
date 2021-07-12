@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: book-app-v1
+  name: book-app-v2
   namespace: practice
   labels:
-    version: v1
+    version: v2
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: book-app
-      version: v1
+      version: v2
   template:
     metadata:
       labels:
         app: book-app
-        version: v1
+        version: v2
 
     spec:
       securityContext:
@@ -23,7 +23,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: book-app
-          image: docker.io/juablazmahuerta/book-app:v1
+          image: docker.io/juablazmahuerta/book-app:v2
           env:
             - name: MYSQL_HOST
               value: db-flyway
