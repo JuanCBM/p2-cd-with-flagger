@@ -53,31 +53,26 @@ kubectl apply -f sidecar.yaml -n practice
 kubectl label namespace practice istio-injection=enabled
 ```
 
-7. Tunnel 
-
-minikube tunnel -p canary-istio
-
-
-8. Deploy application deployment & service:
+7. Deploy application deployment & service:
 
 ```
 kubectl apply -f deployment.yaml -n practice
 ```
 
-9. Create istio gateway
+8. Create istio gateway
 
 ```
 kubectl apply -f gateway.yaml -n istio-system
 ```
 
 
-10. Create the virtual service:
+9. Create the virtual service:
 
 ```
 kubectl apply -f virtual-service-v1.yaml -n practice
 ```
 
-11. Check app access
+10. Check app access
 ```
 export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}') 
 ```
@@ -95,6 +90,17 @@ export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
 ```
 
 echo $GATEWAY_URL
+
+
+Alternativa:
+
+```
+export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')```
+
+```
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')```
+
+```
 
 
 
