@@ -6,6 +6,8 @@ metadata:
   labels:
     version: v1
 spec:
+  strategy:
+    type: Recreate
   replicas: 1
   selector:
     matchLabels:
@@ -19,33 +21,36 @@ spec:
     spec:
       containers:
       - name: practice2
-        image: docker.io/gortazar/flyway:v1 #Ours image that need to pull on dockerhub
+        image: docker.io/juablazmahuerta/book-app:v1
         resources:
           requests:
             cpu: "100m"
-        imagePullPolicy: IfNotPresent #Always
+        imagePullPolicy: Always #IfNotPresent 
         ports:
         - containerPort: 9991
         env:
-        - name: MYSQL_HOST
-          value: "db"
+        #- name: MYSQL_HOST
+        #  value: "db"
         - name: SERVER_PORT
           value: "9991"
-        - name: SPRING_FLYWAY_VALIDATE-ON-MIGRATE
-          value: "false"
+        #- name: SPRING_FLYWAY_VALIDATE-ON-MIGRATE
+        #  value: "false"
         - name: SPRING_DATASOURCE_URL
-          value: "jdbc:mysql://db:3306/test"
+          value: "jdbc:mysql://db-service:3306/test"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: practice2
+  name: practice2-service
   namespace: practice
   labels:
     app: practice2
 spec:
   ports:
-  - port: 9991
-    name: http
+  - port: 8881
+    targetPort: 8881
+    protocol: TCP
+    name: practice2-port
   selector:
     app: practice2
+  type: ClusterIP
