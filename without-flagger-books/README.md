@@ -20,6 +20,15 @@ docker push docker.io/juablazmahuerta/book-app:v1
 minikube start --profile canary-istio --kubernetes-version v1.20.0 --memory=10500 --cpus=4  --driver=virtualbox --addons istio-provisioner --addons istio --addons ingress
 
 ```
+2.
+
+```
+minikube --profile canary-istio addons enable istio-provisioner
+```
+
+```
+minikube --profile canary-istio addons enable istio
+```
 
 3. Namespace
 
@@ -31,34 +40,30 @@ kubectl create ns practice
 4. Deploy database deployment:
 
 ```
-kubectl apply -f db-deployment.yaml -n practice
-```
-
-6. Enable istio-injection
-```
-kubectl label namespace practice istio-injection=enabled
-```
-
-7. Deploy application deployment & service:
-
-```
-kubectl apply -f deployment.yaml -n practice
-```
-
-8. Create istio gateway
-
-```
-kubectl apply -f gateway.yaml -n istio-system
+kubectl apply -f db-deployment.yaml
 ```
 
 
-9. Create the virtual service:
+5. Deploy application deployment & service:
 
 ```
-kubectl apply -f virtual-service-v1.yaml -n practice
+kubectl apply -f deployment.yaml
 ```
 
-10. Check app access
+6. Create istio gateway
+
+```
+kubectl apply -f gateway.yaml 
+```
+
+
+7. Create the virtual service:
+
+```
+kubectl apply -f virtual-service-v1.yaml
+```
+
+8. Check app access
 ```
 export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}') 
 ```
@@ -72,21 +77,10 @@ export INGRESS_HOST=$(minikube ip -p canary-istio)
 ```
 
 ```
-export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT 
+export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
 ```
 
 echo $GATEWAY_URL
-
-
-Alternativa:
-
-```
-export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')```
-
-```
-export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')```
-
-```
 
 
 

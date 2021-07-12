@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: book-app-v2
-  namespace: practice
   labels:
     version: v2
 spec:
@@ -26,7 +25,7 @@ spec:
           image: docker.io/juablazmahuerta/book-app:v2
           env:
             - name: MYSQL_HOST
-              value: db-flyway
+              value: book-app
             - name: MYSQL_DB
               value: test
             - name: MYSQL_USER
@@ -45,13 +44,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: book-app
-  namespace: practice
-
   labels:
     app: book-app
 spec:
   ports:
   - port: 9991
     name: http
+    targetPort: 3306
+    protocol: TCP
   selector:
     app: book-app
