@@ -48,7 +48,7 @@ docker push docker.io/juablazmahuerta/book-app:v4
 
 ```
 
-## Istio steps
+## Sobre la aplicación
 
 ### Deploy V1
 1. Arrancamos minikube
