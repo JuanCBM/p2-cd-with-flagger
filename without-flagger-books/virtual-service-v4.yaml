@@ -10,7 +10,7 @@ spec:
   http:
   - match:
     - uri:
-        exact: /
+        regex: .*
     route:
     - destination:
         host: bookapp

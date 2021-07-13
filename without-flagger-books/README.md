@@ -1,4 +1,32 @@
-# ejem-4-canary-book-app
+<h1 align="center">Práctica 2. Despliegue continuo 👨🏻‍💻 </h1>
+
+<p align="center">
+  <a href="/docs" target="_blank">
+    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
+  </a>
+  <a href="#" target="_blank">
+    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+  </a>
+</p>
+
+Despliegue continuo Istio con VirtualService y DestinationRule.
+
+## Authors
+
+👤 **JuanCBM**: Juan Carlos Blázquez Muñoz
+
+* Github: [@JuanCBM](https://github.com/JuanCBM)
+
+👤 **mahuerta**: Miguel Ángel Huerta Rodríguez
+
+* Github: [@mahuerta](https://github.com/mahuerta)
+
+
+# Despliegue continuo con Istio
+Hemos elegido la versión con Istio porque con Flagger no hemos conseguido que funcionara correctamente.
+
+## Imágenes a dockerhub:
+- [DockerHub repo](https://hub.docker.com/r/juablazmahuerta/book-app)
 
 Generar las imágenes de docker:
 
@@ -20,161 +48,158 @@ docker push docker.io/juablazmahuerta/book-app:v4
 
 ```
 
-# Deploy V1
+## Istio steps
 
-1. Start Minikube
-
+### Deploy V1
+1. Arrancamos minikube
 ```
-minikube start --profile canary-istio --kubernetes-version v1.17.0 --memory=5000 --cpus=4  --driver=virtualbox
-
-```
-2.
-
-```
-minikube --profile canary-istio addons enable istio-provisioner
+minikube start --memory 8192 --cpus 4 --driver virtualbox --kubernetes-version v1.21.2 --addons istio-provisioner --addons istio --addons ingress
 ```
 
-```
-minikube --profile canary-istio addons enable istio
-```
-
-3. Namespace
-
-```
-kubectl create ns practice
-
-```
-
-4. Deploy database deployment:
-
+2. Base de datos
 ```
 kubectl apply -f db-deployment.yaml
 ```
 
-
-5. Deploy application deployment & service:
-
-```
-kubectl apply -f deployment.yaml
-```
-
-6. Create istio gateway
+3. Deployment de v1
 
 ```
-kubectl apply -f gateway.yaml 
+kubectl apply -f service.yaml
 ```
 
-
-7. Create the virtual service:
-
 ```
-kubectl apply -f virtual-service-v1.yaml
+kubectl apply -f deployment-v1.yaml
 ```
 
-8. Check app access
+4. Gateway
+```
+kubectl apply -f gateway.yaml
+```
+
+5. Destination rule
+```
+kubectl apply -f 01-destination-rule.yaml
+```
+
+6. Virtual service
+```
+kubectl apply -f 02-virtual-service-v1.yaml
+```
+
+7. Comprobamos el Acceso a la aplicación
+
 ```
 export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
-```
 
-```
-export INGRESS_HOST=$(minikube ip -p canary-istio)
-```
+export INGRESS_HOST=$(minikube ip)
 
-```
 export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
 ```
 
-echo $GATEWAY_URL
+Petición de obtención de libros:
+
+> curl http://$GATEWAY_URL/api/books/
+
+> curl http://$GATEWAY_URL/api/books/1
 
 
+**La versión 1 está desplegada y lista para actualizaciones.**
 
-curl http://$GATEWAY_URL/api/books/
+### Deploy V2
+
+Deploy v2:
+> kubectl apply -f deployment-v2.yaml
+
+Destination rule:
+> kubectl apply -f 03-destination-rule.yaml
+
+Realización de la canary:
+- Se despliega comenzando por un 10% de tráfico
+- Se sube en intervalos de 10% en 30s
+- Se acepta la canary si llegamos al 50% sin problemas
+
+Despliegue de la aplicación 90% de v1 y 10% de v2:
+
+> kubectl apply -f 04-virtual-service-v1-90-v2-10.yaml
+
+Pasados 30 segundos, despliegue de la aplicación 80% de v1 y 20% de v2:
+
+> kubectl apply -f 05-virtual-service-v1-80-v2-20.yaml
+
+Pasados 30 segundos, despliegue de la aplicación 70% de v1 y 30% de v2:
+
+> kubectl apply -f 06-virtual-service-v1-70-v2-30.yaml
+
+Pasados 30 segundos, despliegue de la aplicación 60% de v1 y 40% de v2:
+
+> kubectl apply -f 07-virtual-service-v1-60-v2-40.yaml
+
+Pasados 30 segundos, despliegue de la aplicación 50% de v1 y 50% de v2:
+
+> kubectl apply -f 08-virtual-service-v1-50-v2-50.yaml
+
+Todo el tráfico a v2:
+
+> kubectl apply -f 09-virtual-service-v2.yaml
+
+Destination rule v2
+> kubectl apply -f 10-destination-rule-v2.yaml
+
+Borramos el despliegue de v1:
+> kubectl delete -f deployment-v1.yaml
+
+Petición de obtención de libros:
+
+> curl http://$GATEWAY_URL/api/books/
+
+> curl http://$GATEWAY_URL/api/books/1
 
 
+**Se podría aplicar en sucesivas versiones**
 
-**V1 is deployed and ready for book-app version updates**
+### Desplegamos v3
+> kubectl apply -f deployment-v3.yaml
 
-# V1 to V2
+Virtual service v2 a v3 (Con las configuraciones de pesos)
+> kubectl apply -f virtual-service-v2-to-v3.yaml
 
-1. Deploy new version v2 deployment
+Destination rule v2 a v3 
+> kubectl apply -f destination-rule-v2-to-v3.yaml
 
-```
-kubectl apply -f deployment-v2.yaml
-```
+Virtual service de v3
+> kubectl apply -f virtual-service-v3.yaml
 
-2. Distribute application 90% to v1 and 10% to v2
+Destination rule v3 
+> kubectl apply -f destination-rule-v3.yaml
 
-```
-kubectl apply -f virtual-service-v1-to-v2.yaml
-```
+Delete deployment v2:
+> kubectl delete -f deployment-v2.yaml
 
-# V2
 
-1. Execute the virtual service to only serve to v2:
+### Desplegamos v4
+> kubectl apply -f deployment-v4.yaml
 
-```
-kubectl apply -f virtual-service-v2.yaml
-```
+Virtual service v3 a v4 (Con las configuraciones de pesos)
+> kubectl apply -f virtual-service-v3-to-v4.yaml
 
-2. Delete deployment V1
+Destination rule v3 a v4 
+> kubectl apply -f destination-rule-v3-to-v4.yaml
 
-```
-kubectl delete deployment v1
-```
+Virtual service de v4
+> kubectl apply -f virtual-service-v4.yaml
 
-# V2 to V3
+Destination rule v4 
+> kubectl apply -f destination-rule-v4.yaml
 
-1. Deploy new version v3 deployment
+Delete deployment v3:
+> kubectl delete -f deployment-v3.yaml
 
-```
-kubectl apply -f deployment-v3.yaml
-```
+Tendríamos todo el tráfico en la versión nueva v4.
 
-2. Distribute application 90% to v2 and 10% to v3
+#### Reference
+[github.com/MasterCloudApps/4.4.Despliegue-continuo/tree/master/ejem-4-canary-zerodowntime](https://github.com/MasterCloudApps/4.4.Despliegue-continuo/tree/master/ejem-4-canary-zerodowntime)
 
-```
-kubectl apply -f virtual-service-v2-to-v3.yaml
-```
+#### Istio issue
+[https://istio.io/latest/about/faq/security/#mysql-with-mtls](https://istio.io/latest/about/faq/security/#mysql-with-mtls)
 
-# V3
-
-1. Execute the virtual service to only serve to v3:
-
-```
-kubectl apply -f virtual-service-v3.yaml
-```
-
-2. Delete deployment v2
-
-```
-kubectl delete deployment v2
-```
-
-# V3 to V4
-
-1. Deploy new version v4 deployment
-
-```
-kubectl apply -f deployment-v4.yaml
-```
-
-2. Distribute application 90% to v3 and 10% to v4
-
-```
-kubectl apply -f virtual-service-v3-to-v4.yaml
-```
-
-# V4
-
-1. Execute the virtual service to only serve to v4:
-
-```
-kubectl apply -f virtual-service-v4.yaml
-```
-
-2. Delete deployment v3
-
-```
-kubectl delete deployment v3
-```
 

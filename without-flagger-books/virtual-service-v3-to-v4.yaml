@@ -10,17 +10,17 @@ spec:
   http:
   - match:
     - uri:
-        exact: /
+        regex: .*
     route:
     - destination:
         host: bookapp
         subset: v3
         port:
           number: 9991
-      weight: 90
+      weight: 90 # 80, 70, 60, 50
     - destination:
         host: bookapp
         subset: v4
         port:
           number: 9991
-      weight: 10
+      weight: 10 # 20, 30, 40, 50
