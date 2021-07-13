@@ -6,17 +6,9 @@
 ## Istio steps
 
 ```
-minikube start --memory 10500 --cpus 4 --profile canary-istio --driver virtualbox --kubernetes-version v1.20.2
+minikube start --memory 10500 --cpus 4 --driver virtualbox --kubernetes-version v1.21.2 --addons istio-provisioner --addons istio --addons ingress
 
-minikube --profile canary-istio addons enable istio-provisioner
 
-minikube --profile canary-istio addons enable istio
-
-minikube --profile canary-istio addons enable ingress
-
-kubectl create ns practice
-
-kubectl label namespace practice istio-injection=enabled
 
 kubectl apply -f db-deployment.yaml
 
