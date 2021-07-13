@@ -3,13 +3,21 @@
 Generar las imágenes de docker:
 
 ```
-mvn spring-boot:build-image -Dspring-boot.build-image.imageName=juablazmahuerta/book-app:v1
+mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=juablazmahuerta/book-app:v1 
+mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=juablazmahuerta/book-app:v2 
+mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=juablazmahuerta/book-app:v3 
+mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=juablazmahuerta/book-app:v4 
+
 ```
 
 Push image to repo:
 
 ```
 docker push docker.io/juablazmahuerta/book-app:v1
+docker push docker.io/juablazmahuerta/book-app:v2
+docker push docker.io/juablazmahuerta/book-app:v3
+docker push docker.io/juablazmahuerta/book-app:v4
+
 ```
 
 # Deploy V1
@@ -17,8 +25,17 @@ docker push docker.io/juablazmahuerta/book-app:v1
 1. Start Minikube
 
 ```
-minikube start --profile canary-istio --kubernetes-version v1.20.0 --memory=10500 --cpus=4  --driver=virtualbox --addons istio-provisioner --addons istio --addons ingress
+minikube start --profile canary-istio --kubernetes-version v1.17.0 --memory=5000 --cpus=4  --driver=virtualbox
 
+```
+2.
+
+```
+minikube --profile canary-istio addons enable istio-provisioner
+```
+
+```
+minikube --profile canary-istio addons enable istio
 ```
 
 3. Namespace
@@ -31,45 +48,32 @@ kubectl create ns practice
 4. Deploy database deployment:
 
 ```
-kubectl apply -f db-deployment.yaml -n practice
-```
-
-6. Enable istio-injection
-```
-kubectl label namespace practice istio-injection=enabled
-```
-
-7. Tunnel 
-
-minikube tunnel -p canary-istio
-
-
-8. Deploy application deployment & service:
-
-```
-kubectl apply -f deployment.yaml -n practice
-```
-
-9. Create istio gateway
-
-```
-kubectl apply -f gateway.yaml -n istio-system
+kubectl apply -f db-deployment.yaml
 ```
 
 
-10. Create the virtual service:
+5. Deploy application deployment & service:
 
 ```
-kubectl apply -f virtual-service-v1.yaml -n practice
+kubectl apply -f deployment.yaml
 ```
 
-11. Check app access
-```
-export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}') 
-```
+6. Create istio gateway
 
 ```
-export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}')
+kubectl apply -f gateway.yaml 
+```
+
+
+7. Create the virtual service:
+
+```
+kubectl apply -f virtual-service-v1.yaml
+```
+
+8. Check app access
+```
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
 ```
 
 ```
@@ -77,7 +81,7 @@ export INGRESS_HOST=$(minikube ip -p canary-istio)
 ```
 
 ```
-export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT 
+export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
 ```
 
 echo $GATEWAY_URL

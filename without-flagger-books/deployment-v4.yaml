@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bookapp-v2
+  name: bookapp-v4
   labels:
-    version: v2
+    version: v4
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: bookapp
-      version: v2
+      version: v4
   template:
     metadata:
       labels:
         app: bookapp
-        version: v2
+        version: v4
     spec:
       containers:
       - name: bookapp
-        image: docker.io/juablazmahuerta/book-app:v2
+        image: docker.io/juablazmahuerta/book-app:v4
         resources:
           requests:
             cpu: "100m"

@@ -1,26 +1,26 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: book-app
+  name: bookapp
 spec:
   hosts:
   - "*"
   gateways:
-  - book-app-gateway
+  - bookapp-gateway
   http:
   - match:
     - uri:
         exact: /
     route:
     - destination:
-        host: book-app
+        host: bookapp
         subset: v1
         port:
           number: 9991
-      weight: 90
+      weight: 90 # 80, 70, 60, 50
     - destination:
-        host: book-app
+        host: bookapp
         subset: v2
         port:
           number: 9991
-      weight: 10
+      weight: 10 # 20, 30, 40, 50

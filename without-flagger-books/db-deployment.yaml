@@ -1,17 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: db-flyway
-  namespace: practice
+  name: db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: db-flyway
+      app: db
   template:
     metadata:
       labels:
-        app: db-flyway
+        app: db
     spec:
       containers:
         - name: mysql
@@ -27,14 +26,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: db-flyway
-  namespace: practice
-
+  name: db
   labels:
-    app: db-flyway
+    app: db
 spec:
   ports:
   - port: 3306
-    name: http
+    name: tcp
+    targetPort: 3306
+    protocol: TCP
   selector:
-    app: db-flyway
+    app: db
